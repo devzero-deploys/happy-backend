@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://happy-devzero.netlify.app/");
+    res.header("Access-Control-Allow-Origin", "https://happy-devzero.netlify.app");
     res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     app.use(cors());
     next();
