@@ -1,36 +1,26 @@
 import { Router } from 'express';
-import multer from 'multer';
+import KnowledgeController from './controllers/KnowledgeController';
+import ProjectController from './controllers/ProjectController';
+import UserController from './controllers/UserController';
 
-import OrphanagesController from './controllers/OrphanagesController';
-import UsersController from './controllers/UsersController';
-import uploadConfig from './config/upload';
+const routes = Router();
 
-import Image from './models/Image';
-import { getRepository } from 'typeorm';
+routes.get('/', (req, res) => res.status(200).send('<h1>Server running</h1>'));
 
-const routes = Router()
-const upload = multer(uploadConfig)
+routes.get('/knowledge', KnowledgeController.index);
+routes.get('/knowledge/:id', KnowledgeController.show);
+routes.post('/knowledge', UserController.auth, KnowledgeController.create, KnowledgeController.index);
+routes.put('/knowledge/:id', UserController.auth, KnowledgeController.update, KnowledgeController.index);
+routes.delete('/knowledge/:id', UserController.auth, KnowledgeController.delete, KnowledgeController.index);
 
-// MVC - Model Views Controllers
+routes.get('/projects', ProjectController.index);
+routes.get('/projects/:id', ProjectController.show);
+routes.post('/projects', UserController.auth, ProjectController.create, ProjectController.index);
+routes.put('/projects/:id', UserController.auth, ProjectController.update, ProjectController.index);
+routes.delete('/projects/:id', UserController.auth, ProjectController.delete, ProjectController.index);
 
-routes.get('/orphanages', OrphanagesController.index);
-routes.get('/orphanages/:id', OrphanagesController.show);
-routes.post('/orphanages', upload.array('images'), OrphanagesController.create);
-routes.put('/orphanages/:id', upload.array('images'), OrphanagesController.update);
-routes.delete('/orphanages/:id', OrphanagesController.delete);
-
-routes.get('/users', UsersController.index);
-routes.post('/users/create', UsersController.create);
-routes.post('/users/login', UsersController.login);
-routes.post('/users/auth', UsersController.auth, UsersController.show);
-routes.delete('/users/:id', UsersController.delete);
-
-routes.get('/images', async (req, res) => {
-    const imagesRepository = getRepository(Image);
-
-    const images = await imagesRepository.find();
-
-    res.status(200).json({ images })
-})
+routes.post('/users/login', UserController.login);
+routes.post('/users/auth', UserController.auth);
+routes.post('/users/create', UserController.create); // temporary
 
 export default routes;
